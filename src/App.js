@@ -1,17 +1,30 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState , useRef, useEffect} from 'react';
+import React, { useState , useRef, useEffect, useContext} from 'react';
+import {ThemeContext} from './context'
 
+const themes = {
+  red : {background:'white',color:'red'},
+  light : {background:'white',color:'grey'},
+  dark :{background:'black',color:'white'}
+}
 function App() {
-  const [option,setOption] = useState(0);
+const [ theme, setTheme] = useState(themes.light);
 
   return (
+    <ThemeContext.Provider value={theme}>
+
     <div className="App">
      App
+     <button onClick={()=>setTheme(themes.red)}>Red</button>
+     <button onClick={()=>setTheme(themes.dark)}>Dark</button>
+     <button onClick={()=>setTheme(themes.light)}>Light</button>
+
     <ComponentWithClass></ComponentWithClass>
     <ComponentWithHooks></ComponentWithHooks>
      
     </div>
+    </ThemeContext.Provider>
   );
 }
 
@@ -44,11 +57,18 @@ componentWillUnmount(){
 }
   render(){
     return (
-      <div className="App">
-         <h1>Class Based Component : {this.state.name}</h1>
-         <img src="logo192.png" onClick={this.changeImage} ref={this.logo}></img>         <br></br>
-         <input type="text" onChange={(e)=>this.setName(e)}></input>
-      </div>
+    <ThemeContext.Consumer>
+      {
+        (theme)=><div className="App" style={{background:theme.background,color:theme.color}}>
+        <h1>Class Based Component : {this.state.name}</h1>
+        <img src="logo192.png" onClick={this.changeImage} ref={this.logo}></img>         <br></br>
+        <input type="text" onChange={(e)=>this.setName(e)}></input>
+        <Btn></Btn>
+     </div>
+      }
+    </ThemeContext.Consumer>
+
+      
     )
   }
 }
@@ -57,6 +77,8 @@ function ComponentWithHooks(){
 
  const [name, setName] = useState("demo");
  const logo = useRef(null);
+
+ const theme = useContext(ThemeContext);
 
  useEffect(()=>{
     console.log("hook component updated");
@@ -69,13 +91,25 @@ function ComponentWithHooks(){
     logo.current.style.transform = "rotate(25deg)";
  }
   return (
-    <div className="App">
+    <div className="App" style={{background:theme.background,color:theme.color}}>
     <h1>Hook Based Component : {name}</h1>
     <img src="logo192.png" onClick={changeImage} ref={logo}></img>
          <br></br>
     <input type="text" onChange={(e)=>setName(e.target.value)}></input>
-    
+    <Btn></Btn>
  </div>
   )
 }
+
+const Btn = ()=>{
+  const theme = useContext(ThemeContext);
+
+  return(
+    <div >
+          <button style={{background:theme.background,color:theme.color}}>Change</button>
+    </div>
+  )
+  
+}
+
 export default App;
