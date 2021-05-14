@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import React, { useState , useRef, useEffect, useContext, useReducer} from 'react';
-import {ThemeContext} from './context'
+import {ThemeContext, StoreContext} from './context'
 
 const themes = {
   red : {background:'white',color:'red'},
@@ -26,7 +26,9 @@ const [state, dispatch] = useReducer(reducer, [<ComponentWithHooks></ComponentWi
 
   return (
     <ThemeContext.Provider value={theme}>
+     <StoreContext.Provider value={{state, dispatch}}>
 
+    
     <div className="App">
      App
      <button onClick={()=>setTheme(themes.red)}>Red</button>
@@ -45,6 +47,7 @@ const [state, dispatch] = useReducer(reducer, [<ComponentWithHooks></ComponentWi
     {/* <ComponentWithHooks></ComponentWithHooks> */}
      
     </div>
+    </StoreContext.Provider>
     </ThemeContext.Provider>
   );
 }
@@ -124,10 +127,14 @@ function ComponentWithHooks(){
 
 const Btn = ()=>{
   const theme = useContext(ThemeContext);
-
+  const {state, dispatch} = useContext(StoreContext);
   return(
     <div >
+      {state.length} Components
           <button style={{background:theme.background,color:theme.color}}>Change</button>
+          <button style={{background:theme.background,color:theme.color}} onClick={()=>dispatch({type:'ADD'})}>Add</button>
+          <button style={{background:theme.background,color:theme.color}} onClick={()=>dispatch({type:'REMOVE'})}>Remove</button>
+
     </div>
   )
   
