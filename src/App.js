@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState , useRef, useEffect, useContext} from 'react';
+import React, { useState , useRef, useEffect, useContext, useReducer} from 'react';
 import {ThemeContext} from './context'
 
 const themes = {
@@ -11,6 +11,19 @@ const themes = {
 function App() {
 const [ theme, setTheme] = useState(themes.light);
 
+const reducer = (state, action)=>{
+  switch(action.type){
+    case 'ADD':
+      return [...state,<ComponentWithHooks></ComponentWithHooks>]
+  
+    case 'REMOVE':
+      return [...state].slice(0,-1)
+  }
+
+}
+
+const [state, dispatch] = useReducer(reducer, [<ComponentWithHooks></ComponentWithHooks>])
+
   return (
     <ThemeContext.Provider value={theme}>
 
@@ -20,8 +33,16 @@ const [ theme, setTheme] = useState(themes.light);
      <button onClick={()=>setTheme(themes.dark)}>Dark</button>
      <button onClick={()=>setTheme(themes.light)}>Light</button>
 
-    <ComponentWithClass></ComponentWithClass>
-    <ComponentWithHooks></ComponentWithHooks>
+     <br></br>
+     <button onClick={()=>dispatch({type:'ADD'})}>Add Component</button>
+     <button onClick={()=>dispatch({type:'REMOVE'})}>Remove Component</button>
+
+     {
+       state.map(c=>c)
+     }
+
+    {/* <ComponentWithClass></ComponentWithClass> */}
+    {/* <ComponentWithHooks></ComponentWithHooks> */}
      
     </div>
     </ThemeContext.Provider>
