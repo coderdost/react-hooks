@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import React, { useState , useRef, useEffect, useContext, useReducer} from 'react';
+import React, { useState , useRef, useEffect, useContext, useReducer, useMemo, useCallback} from 'react';
 import {ThemeContext, StoreContext} from './context'
 
 const themes = {
@@ -128,9 +128,17 @@ function ComponentWithHooks(){
 const Btn = ()=>{
   const theme = useContext(ThemeContext);
   const {state, dispatch} = useContext(StoreContext);
+  const random =   useMemo(()=>Math.random().toFixed(2),[])
+  const b =   Math.random().toFixed(2);
+  const randomGenerator = (a=b)=>{
+    return a;
+  }
+  const rG = useCallback(randomGenerator,[]);
+  console.log('rg:',rG(),'b:',b);
   return(
     <div >
-      {state.length} Components
+      <h1>{rG()}</h1>
+      {state.length} Components 
           <button style={{background:theme.background,color:theme.color}}>Change</button>
           <button style={{background:theme.background,color:theme.color}} onClick={()=>dispatch({type:'ADD'})}>Add</button>
           <button style={{background:theme.background,color:theme.color}} onClick={()=>dispatch({type:'REMOVE'})}>Remove</button>
